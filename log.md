@@ -71,7 +71,6 @@ Useful links:
 
 <h3>11-Feb-2020, MS</h3>
 
-<h4>[ Classes ](https://github.com/goirijo/utiliteam/blob/master/slides/200212_casmmeeting_classes.pdf) (presented by Colleen) </h4>
 <h4>
   <a href="https://github.com/goirijo/utiliteam/blob/master/slides/200212_casmmeeting_classes.pdf">
     Classes
