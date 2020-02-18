@@ -76,6 +76,7 @@ Useful links:
   <a href="https://github.com/goirijo/utiliteam/blob/master/slides/200212_casmmeeting_classes.pdf">
     Classes
   </a>
+(presented by Colleen) 
 </h4>
 Classes are a type of data structure that contains data members and data functions <br> both of which can be public or private (and also protected)
 
