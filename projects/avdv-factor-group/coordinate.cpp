@@ -55,6 +55,7 @@ bool VectorPeriodicCompare_f::operator()(const Eigen::Vector3d& other) const
     Eigen::Vector3d cartesian_distance_vector = convert_to_cartesian(m_lattice, distance_vector);
     return std::abs(cartesian_distance_vector.norm())<m_precision;
 }
+
 Eigen::Vector3d operator*(const SymOp& transformation, const Eigen::Vector3d& vector)
 {
     Eigen::Vector3d transformed = (transformation.get_cart_matrix()) * (vector)+transformation.get_translation();
