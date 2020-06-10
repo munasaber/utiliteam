@@ -1,0 +1,37 @@
+
+
+Overall ALgorithm 
+
+Read_Poscar
+
+
+make_grid_points(in_a, in_b, in_c, lattice)
+{
+	std::vector<Coordinate> grid;
+	return mxnxl grid
+}
+
+discard_certain_gridpoints(grid, Structure my_struc, distance_criteria)
+{
+    return left_over_gridpoints 
+}
+
+find_asym_unit(left_over_grid, factorgroup, Structure?)
+{
+	return asym_units
+}
+
+make_gridpoint_orbits(asym_units, factorgroup)
+{
+
+}
+
+
+
+
+
+
+//Find Asymmetric CLusters
+	Apply_factorgroup
+	get_asym_units
+	 
