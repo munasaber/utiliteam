@@ -99,7 +99,7 @@ bool does_make_orbits_work_for_orbit_size_unit_lattice(double tol)
     std::vector<Eigen::Vector3d> all_interstitial_coordinates{base_coordinate, symmetrically_ineqivalent, symmetrically_equivalent};
 
     //TODO: Rename to bin into orbits, or bin into equivalents, or something.
-    return make_orbits(all_interstitial_coordinates, factor_group, unit_lattice, tol).size() == 2;
+    return bin_into_symmetrically_equivalent(all_interstitial_coordinates, factor_group, unit_lattice, tol).size() == 2;
 }
 
 bool does_make_orbits_work_for_containing_coordinates() { return 0; }

@@ -74,8 +74,11 @@ std::vector<Eigen::Vector3d> find_interstitials_within_radius(std::vector<Eigen:
 // TODO:
 std::vector<Eigen::Vector3d> make_orbit(const Eigen::Vector3d& coordinate,
                                         const SymGroup<SymOp, BinarySymOpPeriodicCompare_f>& factor_group,
-                                        const Lattice& lattice);
-
+                                        const Lattice& lattice)
+{
+ 	std::vector<Eigen::Vector3d> orbit;
+	return orbit;
+}
 // Indexes vectors of the different asymmetric orbits of the system. This cam further be broken into the asymmetric atoms in the system
 // For reference these use the interstitial coordinates after the old ones are taken out
 // The definition for orbit is vague and confusing and I do not like it
