@@ -55,23 +55,24 @@ std::vector<Eigen::Vector3d> find_interstitials_within_radius(std::vector<Eigen:
 }
 
 // Discard certain interstital grid points within certain radius
-// std::vector<Eigen::Vector3d> keep_reasonable_interstitial_gridpoints(std::vector<Eigen::Vector3d>& total_interstitial_coordinates,
-// std::vector<Eigen::Vector3d>& interstitial_coordinates_to_discard, double  tol, Lattice& lattice)
-//{
-//	std::vector<Eigen::Vector3d> remaining_interstitials;
-//	for (const Eigen::Vector3d& interstitial_coord : total_interstitial_coordinates)
-//	{
-//		SitePeriodicCompare_f compare_total_to_discarding_interstitials(Site("temp", Coordinate(interstitial_coord)), tol, lattice);
-//		if (std::find_if(interstitial_coordinates_to_discard.begin(), interstitial_coordinates_to_discard.end(),
-// compare_total_to_discarding_interstitials)==interstitial_coordinates_to_discard.end())
-//		{
-//			remaining_interstitials.emplace_back(interstitial_coord);
-//		}
-//	}
-//	return remaining_interstitials;
-//}
+std::vector<Eigen::Vector3d> keep_reasonable_interstitial_gridpoints(const std::vector<Eigen::Vector3d>& total_interstitial_coordinates, const std::vector<Eigen::Vector3d>& interstitial_coordinates_to_discard, double tol, Lattice& lattice)
+{
+	std::vector<Eigen::Vector3d> remaining_interstitials;
+	for (const Eigen::Vector3d& interstitial_coord : total_interstitial_coordinates)
+	{
+		VectorPeriodicCompare_f compare_total_to_discarding_interstitials(interstitial_coord, tol, lattice);
+		if (std::find_if(interstitial_coordinates_to_discard.begin(), interstitial_coordinates_to_discard.end(),
+ compare_total_to_discarding_interstitials)==interstitial_coordinates_to_discard.end())
+		{
+			remaining_interstitials.emplace_back(interstitial_coord);
+		}
+	}
+	return remaining_interstitials;
+}
 
 // TODO:
+
+//I disagree with the existance of this. Making a new orbit is just going to be an empty orbit and adding to an orbit is the main question, but that requires all the moving parts of the original function.
 std::vector<Eigen::Vector3d> make_orbit(const Eigen::Vector3d& coordinate,
                                         const SymGroup<SymOp, BinarySymOpPeriodicCompare_f>& factor_group,
                                         const Lattice& lattice)
@@ -82,6 +83,7 @@ std::vector<Eigen::Vector3d> make_orbit(const Eigen::Vector3d& coordinate,
 // Indexes vectors of the different asymmetric orbits of the system. This cam further be broken into the asymmetric atoms in the system
 // For reference these use the interstitial coordinates after the old ones are taken out
 // The definition for orbit is vague and confusing and I do not like it
+
 std::vector<std::vector<Eigen::Vector3d>>
 bin_into_symmetrically_equivalent(const std::vector<Eigen::Vector3d>& coordinates,
                                   const SymGroup<SymOp, BinarySymOpPeriodicCompare_f>& factor_group,
