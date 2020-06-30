@@ -34,6 +34,8 @@ label_by_symmetrical_equivalence(const std::vector<Eigen::Vector3d>& coordinates
                                   const SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f>& factor_group,
                                   const Lattice& lattice,
                                   double tol);
-//I'm assuming I'll need to change this to Symgroup...
-std::vector<Eigen::Vector3d> make_asymmetric_unit(const std::vector<Eigen::Vector3d>& complete_structure_basis, const std::vector<SymOp>& Sym_group, const Lattice& lattice, double tol);
+std::vector<Eigen::Vector3d> make_asymmetric_unit(const std::vector<Eigen::Vector3d>& complete_structure_basis, 
+                                  const SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f>& factor_group,
+				  const Lattice& lattice, 
+			          double tol);
 #endif 

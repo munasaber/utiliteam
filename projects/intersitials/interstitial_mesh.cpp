@@ -78,6 +78,15 @@ std::vector<Eigen::Vector3d> make_orbit(const Eigen::Vector3d& coordinate,
                                         const Lattice& lattice)
 {
  	std::vector<Eigen::Vector3d> orbit;
+        for (const SymOp& symop : factor_group.operations())
+        {
+	    //I'm honestly not sure what this function is supposed to do so I made something up and hopefully it is in the approximate ball park of what is requested of this function
+	    //Even though it probably is not because this is gibberish
+            Eigen::Vector3d transformedcoord = symop * coordinate;
+	    std::vector<Eigen::Vector3d> new_orbit;
+	    new_orbit.emplace_back(transformedcoord);	    
+	    
+        }
 	return orbit;
 }
 // Indexes vectors of the different asymmetric orbits of the system. This cam further be broken into the asymmetric atoms in the system
@@ -171,7 +180,7 @@ label_by_symmetrical_equivalence(const std::vector<Eigen::Vector3d>& coordinates
 
 /// Tracks the assymetric intersttial atoms
 std::vector<Eigen::Vector3d> make_asymmetric_unit(const std::vector<Eigen::Vector3d>& complete_structure_basis,
-                                                  const std::vector<SymOp>& Sym_group,
+                                                  const SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f>& factor_group,
                                                   const Lattice& lattice,
                                                   double tol)
 {
@@ -180,7 +189,7 @@ std::vector<Eigen::Vector3d> make_asymmetric_unit(const std::vector<Eigen::Vecto
     // apply allsymmetry operations
     for (const auto& basis : complete_structure_basis)
     {
-        for (const auto& Symmetry_operation : Sym_group)
+        for (const auto& Symmetry_operation : factor_group.operations())
         {
             Eigen::Vector3d transformedcoord = Symmetry_operation * basis;
             // TODO: Which comparator should you use?

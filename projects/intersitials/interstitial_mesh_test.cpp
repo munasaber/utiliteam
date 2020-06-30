@@ -1,4 +1,5 @@
 #include "../avdv-factor-group/coordinate.hpp"
+#include "../avdv-factor-group/factor_group.hpp"
 #include "../avdv-factor-group/io.hpp"
 #include "../avdv-factor-group/lattice.hpp"
 #include "../avdv-factor-group/structure.hpp"
@@ -205,7 +206,13 @@ bool does_make_asymmetric_unit_work_for_pnb9o25(double tol)
 {
     Structure pnb9o25 = read_poscar("../avdv-factor-group/test_files/pnb9o25.vasp");
     Eigen::Vector3d base_coordinate(0.25000,  0.50000,  0.50000);
-    Eigen::Vector3d niobium_coordinate(
+    Eigen::Vector3d niobium_coordinate1_Sym1(0.11580,  0.55510,  0.21330);
+    Eigen::Vector3d niobium_coordinate1_Sym2(0.78220,  0.32640,  0.10920);
+    Eigen::Vector3d niobium_coordinate2_Sym1(0.32910,  0.78670,  0.55510);
+    SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f> factor_group=generate_factor_group(pnb9o25, tol);  
+    std::vector<Eigen::Vector3d> all_interstitial_coordinates{base_coordinate, niobium_coordinate1_Sym1, niobium_coordinate1_Sym2, niobium_coordinate2_Sym1};
+    Lattice lattice=pnb9o25.get_lattice();
+    return make_asymmetric_unit(all_interstitial_coordinates, factor_group, lattice, tol).size()==3; 
 }
 
 bool does_make_grid_points_work()
@@ -235,5 +242,6 @@ int main()
     EXPECT_TRUE(does_keep_reasonable_interstitial_gridpoints_work_for_exact_coordinates(tol), "does keep reasonable interstitial functions get the right coordinates");
     EXPECT_TRUE(does_bin_into_symmetrically_equivalent_work_unit_lattice(tol), "does bin into symmetrically equivalent orbits work for unit lattice");
     EXPECT_TRUE(does_label_by_symmetrical_equivalence_work_unit_lattice(tol), "does label by symmetricla equivalence work for a unit lattice");
+    EXPECT_TRUE(does_make_asymmetric_unit_work_for_pnb9o25(tol), "does make asymmetric unit for the pnb9o25 system");
     EXPECT_TRUE(does_make_grid_points_work(), "Check that I can appropriately make grid points");
 }
