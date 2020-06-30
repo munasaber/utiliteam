@@ -23,7 +23,17 @@ std::vector<Eigen::Vector3d> find_interstitials_within_radius(std::vector<Eigen:
 std::vector<Eigen::Vector3d> keep_reasonable_interstitial_gridpoints(const std::vector<Eigen::Vector3d>& total_interstitial_coordinates, const std::vector<Eigen::Vector3d>& interstitial_coordinates_to_discard, double tol, Lattice& lattice);
 
 //I'm still a bit fuzzy on how symgroup works. Is this correct?
-std::vector<std::vector<Eigen::Vector3d>> make_orbits(const std::vector<Eigen::Vector3d>& coordinates, const SymGroup<SymOp, BinarySymOpPeriodicCompare_f>& factor_group, const Lattice& lattice, double tol);
+std::vector<Eigen::Vector3d> make_orbit(const Eigen::Vector3d& coordinates, const SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f>& factor_group, const Lattice& lattice);
+std::vector<std::vector<Eigen::Vector3d>>
+bin_into_symmetrically_equivalent(const std::vector<Eigen::Vector3d>& coordinates,
+                                  const SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f>& factor_group,
+                                  const Lattice& lattice,
+                                  double tol);
+std::vector<int>
+label_by_symmetrical_equivalence(const std::vector<Eigen::Vector3d>& coordinates,
+                                  const SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f>& factor_group,
+                                  const Lattice& lattice,
+                                  double tol);
 //I'm assuming I'll need to change this to Symgroup...
 std::vector<Eigen::Vector3d> make_asymmetric_unit(const std::vector<Eigen::Vector3d>& complete_structure_basis, const std::vector<SymOp>& Sym_group, const Lattice& lattice, double tol);
 #endif 

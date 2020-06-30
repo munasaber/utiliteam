@@ -74,7 +74,7 @@ std::vector<Eigen::Vector3d> keep_reasonable_interstitial_gridpoints(const std::
 
 //I disagree with the existance of this. Making a new orbit is just going to be an empty orbit and adding to an orbit is the main question, but that requires all the moving parts of the original function.
 std::vector<Eigen::Vector3d> make_orbit(const Eigen::Vector3d& coordinate,
-                                        const SymGroup<SymOp, BinarySymOpPeriodicCompare_f>& factor_group,
+                                        const SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f>& factor_group,
                                         const Lattice& lattice)
 {
  	std::vector<Eigen::Vector3d> orbit;
@@ -86,7 +86,7 @@ std::vector<Eigen::Vector3d> make_orbit(const Eigen::Vector3d& coordinate,
 
 std::vector<std::vector<Eigen::Vector3d>>
 bin_into_symmetrically_equivalent(const std::vector<Eigen::Vector3d>& coordinates,
-                                  const SymGroup<SymOp, BinarySymOpPeriodicCompare_f>& factor_group,
+                                  const SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f>& factor_group,
                                   const Lattice& lattice,
                                   double tol)
 {
@@ -130,7 +130,7 @@ bin_into_symmetrically_equivalent(const std::vector<Eigen::Vector3d>& coordinate
 
 std::vector<int>
 label_by_symmetrical_equivalence(const std::vector<Eigen::Vector3d>& coordinates,
-                                  const SymGroup<SymOp, BinarySymOpPeriodicCompare_f>& factor_group,
+                                  const SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f>& factor_group,
                                   const Lattice& lattice,
                                   double tol)
 {
