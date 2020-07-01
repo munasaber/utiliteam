@@ -25,12 +25,17 @@ std::vector<Eigen::Vector3d> keep_reasonable_interstitial_gridpoints(const std::
 //I'm still a bit fuzzy on how symgroup works. Is this correct?
 std::vector<Eigen::Vector3d> make_orbit(const Eigen::Vector3d& coordinates, const SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f>& factor_group, const Lattice& lattice);
 std::vector<std::vector<Eigen::Vector3d>>
-bin_into_symmetrically_equivalent(const std::vector<Eigen::Vector3d>& coordinates,
+more_complex_bin_into_symmetrical_equivalence(const std::vector<Eigen::Vector3d>& coordinates,
                                   const SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f>& factor_group,
                                   const Lattice& lattice,
                                   double tol);
 std::vector<int>
 label_by_symmetrical_equivalence(const std::vector<Eigen::Vector3d>& coordinates,
+                                  const SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f>& factor_group,
+                                  const Lattice& lattice,
+                                  double tol);
+std::vector<std::vector<Eigen::Vector3d>>
+bin_by_symmetrical_equivalence(const std::vector<Eigen::Vector3d>& coordinates,
                                   const SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f>& factor_group,
                                   const Lattice& lattice,
                                   double tol);

@@ -72,17 +72,14 @@ std::vector<Eigen::Vector3d> keep_reasonable_interstitial_gridpoints(const std::
 
 // TODO:
 
-//I disagree with the existance of this. Making a new orbit is just going to be an empty orbit and adding to an orbit is the main question, but that requires all the moving parts of the original function.
 std::vector<Eigen::Vector3d> make_orbit(const Eigen::Vector3d& coordinate,
                                         const SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f>& factor_group,
                                         const Lattice& lattice)
 {
- 	double tol=1e-4;
 	std::vector<Eigen::Vector3d> orbit;
         for (const SymOp& symop : factor_group.operations())
         {
 	    //I'm honestly not sure what this function is supposed to do so I made something up and hopefully it is in the approximate ball park of what is requested of this function
-	    //Even though it probably is not because this is gibberish
             Eigen::Vector3d transformedcoord = symop * coordinate;
             orbit.emplace_back(transformedcoord);	    
 		    
@@ -94,43 +91,37 @@ std::vector<Eigen::Vector3d> make_orbit(const Eigen::Vector3d& coordinate,
 // The definition for orbit is vague and confusing and I do not like it
 
 std::vector<std::vector<Eigen::Vector3d>>
-bin_into_symmetrically_equivalent(const std::vector<Eigen::Vector3d>& coordinates,
+more_complex_bin_into_symmetrical_equivalence(const std::vector<Eigen::Vector3d>& coordinates,
                                   const SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f>& factor_group,
                                   const Lattice& lattice,
                                   double tol)
 {
     std::vector<std::vector<Eigen::Vector3d>> orbit_container;
-    std::vector<Eigen::Vector3d> initial_orbit;
-    initial_orbit.emplace_back(coordinates.at(0));
-    orbit_container.emplace_back(initial_orbit);
-    int site_tally = 0;
     for (const auto& interstitial_coordinate : coordinates)
     {
         for (const SymOp& symop : factor_group.operations())
         {
-            // figure out if definition of orbits is correct because it probably
-            // includes clusters? But we threw those away? look for each basis and see
-            // whether basis is symmetrically equivalent What is even happening
-            Eigen::Vector3d transformedcoord = symop * interstitial_coordinate;
+	    bool already_found=false;
+	    Eigen::Vector3d transformedcoord = symop * interstitial_coordinate;
             for (std::vector<Eigen::Vector3d>& orbit : orbit_container)
             {
                 VectorPeriodicCompare_f test_coord(transformedcoord, tol, lattice);
                 if (find_if(orbit.begin(), orbit.end(), test_coord) != orbit.end())
                 {
-                    // Is it okay to use a reference for the orbit?
-                    orbit.emplace_back(interstitial_coordinate);
-                }
-                else
-                {
-                    site_tally = site_tally + 1;
+                     already_found=true;
+		     //consider doing vector periodic compare for interstitial is something I should keep
+		     VectorPeriodicCompare_f make_sure_interstitial_is_unique(interstitial_coordinate, tol, lattice);
+		     if (find_if(orbit.begin(), orbit.end(), make_sure_interstitial_is_unique)==orbit.end())
+		     	orbit.emplace_back(interstitial_coordinate);
                 }
             }
             // if the site is not in any of the existing orbits then we need to create
             // a new orbit
-            if (site_tally == orbit_container.size())
+            if (!already_found)
             {
                 std::vector<Eigen::Vector3d> new_orbit;
-                orbit_container.emplace_back(new_orbit);
+                new_orbit.emplace_back(interstitial_coordinate);
+		orbit_container.emplace_back(new_orbit);
             }
         }
     }
@@ -178,6 +169,25 @@ label_by_symmetrical_equivalence(const std::vector<Eigen::Vector3d>& coordinates
 }
 
 
+//std::vector<std::vector<Eigen::Vector3d>>
+//bin_by_symmetrical_equivalence(const std::vector<Eigen::Vector3d>& coordinates,
+//                                  const SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f>& factor_group,
+//                                  const Lattice& lattice,
+//                                  double tol)
+//{
+//	std::vector<int> coordinate_tags= label_by_symmetrical_equivalence(coordinates, factor_group, lattice, tol);
+//	//goes through length of coordinate list and connects coordinate to orbit	
+//	int num_orbits=*std::max(coordinate_tags.begin(), coordinate_tags.end())+1;
+//        std::vector<std::vector<Eigen::Vector3d>> orbit_container;
+//	orbit_container.resize(num_orbits);
+//       	for (int i=0; i<coordinates.size(); i++)
+//	{
+//		Eigen::Vector3d temp_coord=coordinates[i];
+//		int label=coordinate_tags[i];
+//		orbit_container[label].emplace_back(temp_coord);
+//	}
+//	return orbit_container;	
+//}
 /// Tracks the assymetric intersttial atoms
 std::vector<Eigen::Vector3d> make_asymmetric_unit(const std::vector<Eigen::Vector3d>& complete_structure_basis,
                                                   const SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f>& factor_group,
