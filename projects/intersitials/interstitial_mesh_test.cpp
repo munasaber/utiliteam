@@ -244,6 +244,7 @@ bool does_make_asymmetric_unit_work_for_pnb9o25(double tol)
     Eigen::Vector3d niobium_coordinate2_Sym1(0.32910,  0.78670,  0.55510);
     std::vector<Eigen::Vector3d> all_interstitial_coordinates{base_coordinate, niobium_coordinate1_Sym1, niobium_coordinate1_Sym2, niobium_coordinate2_Sym1};
     Lattice lattice=pnb9o25.get_lattice();
+    std::cout<< make_asymmetric_unit(all_interstitial_coordinates, factor_group, lattice, tol).size()<< std::endl;
     return make_asymmetric_unit(all_interstitial_coordinates, factor_group, lattice, tol).size()==3; 
 }
 

@@ -213,3 +213,16 @@ std::vector<Eigen::Vector3d> make_asymmetric_unit(const std::vector<Eigen::Vecto
     }
     return asymmetric_unit;
 }
+//std::vector<Eigen::Vector3d> make_asymmetric_unit(const std::vector<Eigen::Vector3d>& complete_structure_basis,
+//                                                  const SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f>& factor_group,
+//                                                  const Lattice& lattice,
+//                                                  double tol)
+//{
+//	std::vector<Eigen::Vector3d> asymmetric_unit_collated;
+//	std::vector<std::vector<Eigen::Vector3d>> total_orbits=more_complex_bin_into_symmetrical_equivalence(complete_structure_basis, factor_group, lattice, tol);
+//	for (const auto& orbit: total_orbits)
+//	{
+//		asymmetric_unit_collated.push_back(orbit[0]);
+//	}
+//	return asymmetric_unit_collated;
+//}

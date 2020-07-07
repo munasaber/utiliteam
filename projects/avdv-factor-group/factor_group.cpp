@@ -60,8 +60,8 @@ SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f> g
 {
     SymGroup<SymOp, CartesianBinaryComparator_f>  point_group=generate_point_group(struc.get_lattice(), tol);
 
-    std::cout<<"I'm here! point group passed"<<std::endl;
-    std::cout<<"Point Group Size is :"<< point_group.operations().size()<<std::endl;
+//    std::cout<<"I'm here! point group passed"<<std::endl;
+//    std::cout<<"Point Group Size is :"<< point_group.operations().size()<<std::endl;
 /*    std::cout<<" This is the input lattice for comparisons"<<std::endl;
     std::cout<< struc.get_lattice().row_vector_matrix()<<std::endl;*/
     const auto& basis=struc.get_sites(); 
