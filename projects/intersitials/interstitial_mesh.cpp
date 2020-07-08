@@ -169,60 +169,60 @@ label_by_symmetrical_equivalence(const std::vector<Eigen::Vector3d>& coordinates
 }
 
 
-//std::vector<std::vector<Eigen::Vector3d>>
-//bin_by_symmetrical_equivalence(const std::vector<Eigen::Vector3d>& coordinates,
-//                                  const SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f>& factor_group,
-//                                  const Lattice& lattice,
-//                                  double tol)
-//{
-//	std::vector<int> coordinate_tags= label_by_symmetrical_equivalence(coordinates, factor_group, lattice, tol);
-//	//goes through length of coordinate list and connects coordinate to orbit	
-//	int num_orbits=*std::max(coordinate_tags.begin(), coordinate_tags.end())+1;
-//        std::vector<std::vector<Eigen::Vector3d>> orbit_container;
-//	orbit_container.resize(num_orbits);
-//       	for (int i=0; i<coordinates.size(); i++)
-//	{
-//		Eigen::Vector3d temp_coord=coordinates[i];
-//		int label=coordinate_tags[i];
-//		orbit_container[label].emplace_back(temp_coord);
-//	}
-//	return orbit_container;	
-//}
-/// Tracks the assymetric intersttial atoms
-std::vector<Eigen::Vector3d> make_asymmetric_unit(const std::vector<Eigen::Vector3d>& complete_structure_basis,
-                                                  const SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f>& factor_group,
-                                                  const Lattice& lattice,
-                                                  double tol)
+std::vector<std::vector<Eigen::Vector3d>>
+bin_by_symmetrical_equivalence(const std::vector<Eigen::Vector3d>& coordinates,
+                                  const SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f>& factor_group,
+                                  const Lattice& lattice,
+                                  double tol)
 {
-    std::vector<Eigen::Vector3d> asymmetric_unit;
-    // for each site on the basis
-    // apply allsymmetry operations
-    for (const auto& basis : complete_structure_basis)
-    {
-        for (const auto& Symmetry_operation : factor_group.operations())
-        {
-            Eigen::Vector3d transformedcoord = Symmetry_operation * basis;
-            // TODO: Which comparator should you use?
-            VectorPeriodicCompare_f test_coord(transformedcoord, tol, lattice);
-
-            if (find_if(asymmetric_unit.begin(), asymmetric_unit.end(), test_coord) == asymmetric_unit.end())
-            {
-                asymmetric_unit.push_back(transformedcoord);
-            }
-        }
-    }
-    return asymmetric_unit;
+	std::vector<int> coordinate_tags= label_by_symmetrical_equivalence(coordinates, factor_group, lattice, tol);
+	//goes through length of coordinate list and connects coordinate to orbit	
+	int num_orbits=*std::max_element(coordinate_tags.begin(), coordinate_tags.end())+1;
+	std::vector<std::vector<Eigen::Vector3d>> orbit_container;
+	orbit_container.resize(num_orbits);
+       	for (int i=0; i<coordinates.size(); i++)
+	{
+		Eigen::Vector3d temp_coord=coordinates[i];
+		int label=coordinate_tags[i];
+		orbit_container[label].emplace_back(temp_coord);
+	}
+	return orbit_container;	
 }
+/// Tracks the assymetric intersttial atoms
 //std::vector<Eigen::Vector3d> make_asymmetric_unit(const std::vector<Eigen::Vector3d>& complete_structure_basis,
 //                                                  const SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f>& factor_group,
 //                                                  const Lattice& lattice,
 //                                                  double tol)
 //{
-//	std::vector<Eigen::Vector3d> asymmetric_unit_collated;
-//	std::vector<std::vector<Eigen::Vector3d>> total_orbits=more_complex_bin_into_symmetrical_equivalence(complete_structure_basis, factor_group, lattice, tol);
-//	for (const auto& orbit: total_orbits)
-//	{
-//		asymmetric_unit_collated.push_back(orbit[0]);
-//	}
-//	return asymmetric_unit_collated;
+//    std::vector<Eigen::Vector3d> asymmetric_unit;
+//    // for each site on the basis
+//    // apply allsymmetry operations
+//    for (const auto& basis : complete_structure_basis)
+//    {
+//        for (const auto& Symmetry_operation : factor_group.operations())
+//        {
+//            Eigen::Vector3d transformedcoord = Symmetry_operation * basis;
+//            // TODO: Which comparator should you use?
+//            VectorPeriodicCompare_f test_coord(transformedcoord, tol, lattice);
+//
+//            if (find_if(asymmetric_unit.begin(), asymmetric_unit.end(), test_coord) == asymmetric_unit.end())
+//            {
+//                asymmetric_unit.push_back(transformedcoord);
+//            }
+//        }
+//    }
+//    return asymmetric_unit;
 //}
+std::vector<Eigen::Vector3d> make_asymmetric_unit(const std::vector<Eigen::Vector3d>& complete_structure_basis,
+                                                  const SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f>& factor_group,
+                                                  const Lattice& lattice,
+                                                  double tol)
+{
+	std::vector<Eigen::Vector3d> asymmetric_unit_collated;
+	std::vector<std::vector<Eigen::Vector3d>> total_orbits=bin_by_symmetrical_equivalence(complete_structure_basis, factor_group, lattice, tol);
+	for (const auto& orbit: total_orbits)
+	{
+		asymmetric_unit_collated.push_back(orbit[0]);
+	}
+	return asymmetric_unit_collated;
+}
