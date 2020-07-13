@@ -268,7 +268,7 @@ bool does_label_by_symmetrical_equivalence_work_unit_lattice(double tol)
 }
 bool does_make_orbits_work_for_containing_coordinates() { return 0; }
 
-bool does_make_asymmetric_unit__work_unit_lattice(double tol)
+bool does_make_asymmetric_unit_work_unit_lattice(double tol)
 {
     Lattice unit_lattice(Eigen::Vector3d(1, 0, 0), Eigen::Vector3d(0, 1, 0), Eigen::Vector3d(0, 0, 1));
     Eigen::Vector3d base_coordinate(0.5, 0.5, 0.75);
@@ -342,6 +342,6 @@ int main()
     EXPECT_TRUE(does_label_by_symmetrical_equivalence_work_unit_lattice(tol), "does label by symmetricla equivalence work for a unit lattice");
     EXPECT_TRUE(does_make_asymmetric_unit_work_for_pnb9o25(tol), "does make asymmetric unit for the pnb9o25 system");
     EXPECT_TRUE(does_simplistic_bin_into_symmetrically_equivalent_work_unit_lattice_exact_coordinates(tol), "does simpler bin by symmetrical equivalece work");
-    EXPECT_TRUE(does_make_asymmetric_unit__work_unit_lattice(tol), "Does asym unit work on the unit lattice");
+    EXPECT_TRUE(does_make_asymmetric_unit_work_unit_lattice(tol), "Does asym unit work on the unit lattice");
     EXPECT_TRUE(does_make_grid_points_work(), "Check that I can appropriately make grid points");
 }
