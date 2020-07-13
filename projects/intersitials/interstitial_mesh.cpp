@@ -79,10 +79,8 @@ std::vector<Eigen::Vector3d> make_orbit(const Eigen::Vector3d& coordinate,
 	std::vector<Eigen::Vector3d> orbit;
         for (const SymOp& symop : factor_group.operations())
         {
-	    //I'm honestly not sure what this function is supposed to do so I made something up and hopefully it is in the approximate ball park of what is requested of this function
             Eigen::Vector3d transformedcoord = symop * coordinate;
-            orbit.emplace_back(transformedcoord);	    
-		    
+    	    orbit.emplace_back(transformedcoord);	    
         }
 	return orbit;
 }
@@ -184,7 +182,11 @@ bin_by_symmetrical_equivalence(const std::vector<Eigen::Vector3d>& coordinates,
 	{
 		Eigen::Vector3d temp_coord=coordinates[i];
 		int label=coordinate_tags[i];
+		VectorCompare_f compare_temp_coord_to_whats_in_index_of_orbit_container(temp_coord, tol);
+		if (find_if(orbit_container[label].begin(), orbit_container[label].end(), compare_temp_coord_to_whats_in_index_of_orbit_container)==orbit_container[label].end())
+		{
 		orbit_container[label].emplace_back(temp_coord);
+		}
 	}
 	return orbit_container;	
 }
