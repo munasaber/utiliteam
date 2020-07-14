@@ -295,7 +295,7 @@ bool does_make_asymmetric_unit_work_unit_lattice(double tol)
 }
 bool does_make_asymmetric_unit_work_for_pnb9o25(double tol)
 {
-    Structure pnb9o25 = read_poscar("../avdv-factor-group/test_files/CORRECTSYM_Li20PNb9O25_POSCAR.vasp");
+    Structure pnb9o25 = read_poscar("../avdv-factor-group/test_files/pnb9o25_correctsym.vasp");
     auto factor_group=generate_factor_group(pnb9o25, tol);  
     for (const auto& symop: factor_group.operations())
     {
@@ -303,14 +303,31 @@ bool does_make_asymmetric_unit_work_for_pnb9o25(double tol)
 	    std::cout<<symop.get_translation()<<std::endl<<std::endl<<std::endl;
     }
     Eigen::Vector3d base_coordinate(0.25000,  0.50000,  0.50000);
-    Eigen::Vector3d niobium_coordinate1_Sym1(0.5, 0.5, 0.5);
+    Eigen::Vector3d niobium_coordinate1_Sym1(0.5000, 0.5000, 0.500);
     Eigen::Vector3d niobium_coordinate1_Sym2(0.11580,  0.55510,  0.21330);
-    Eigen::Vector3d niobium_coordinate2_Sym1(0.5, -0.5, -0.5);
+    Eigen::Vector3d niobium_coordinate2_Sym1(0.5000, -0.5000, -0.500);
     std::vector<Eigen::Vector3d> all_interstitial_coordinates{base_coordinate, niobium_coordinate1_Sym1, niobium_coordinate1_Sym2, niobium_coordinate2_Sym1};
     Lattice lattice=pnb9o25.get_lattice();
     std::cout<< make_asymmetric_unit(all_interstitial_coordinates, factor_group, lattice, tol).size()<< std::endl;
-    return make_asymmetric_unit(all_interstitial_coordinates, factor_group, lattice, tol).size()==3; 
+    //return make_asymmetric_unit(all_interstitial_coordinates, factor_group, lattice, tol).size()==3;
+    
+     std::vector<Eigen::Vector3d> asym_unit= make_asymmetric_unit(all_interstitial_coordinates, factor_group, lattice, tol);
+    if (!asym_unit.at(0).isApprox(base_coordinate, 0.001))
+     {	
+	    return false; 
+     }
+    if (!asym_unit.at(1).isApprox(niobium_coordinate1_Sym1, 0.001))
+     {	
+	    return false; 
+     }
+    if (!asym_unit.at(2).isApprox(niobium_coordinate1_Sym2, 0.001))
+     {	
+	    return false; 
+     }
+     return true; 
 }
+
+
 
 bool does_make_grid_points_work()
 {
