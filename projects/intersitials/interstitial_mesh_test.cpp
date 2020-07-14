@@ -295,7 +295,7 @@ bool does_make_asymmetric_unit_work_unit_lattice(double tol)
 }
 bool does_make_asymmetric_unit_work_for_pnb9o25(double tol)
 {
-    Structure pnb9o25 = read_poscar("../avdv-factor-group/test_files/pnb9o25_correctsym.vasp");
+    Structure pnb9o25 = read_poscar("../avdv-factor-group/test_files/pnb9o25.vasp");
     auto factor_group=generate_factor_group(pnb9o25, tol);  
     for (const auto& symop: factor_group.operations())
     {
@@ -309,9 +309,7 @@ bool does_make_asymmetric_unit_work_for_pnb9o25(double tol)
     std::vector<Eigen::Vector3d> all_interstitial_coordinates{base_coordinate, niobium_coordinate1_Sym1, niobium_coordinate1_Sym2, niobium_coordinate2_Sym1};
     Lattice lattice=pnb9o25.get_lattice();
     std::cout<< make_asymmetric_unit(all_interstitial_coordinates, factor_group, lattice, tol).size()<< std::endl;
-    //return make_asymmetric_unit(all_interstitial_coordinates, factor_group, lattice, tol).size()==3;
-    
-     std::vector<Eigen::Vector3d> asym_unit= make_asymmetric_unit(all_interstitial_coordinates, factor_group, lattice, tol);
+    std::vector<Eigen::Vector3d> asym_unit= make_asymmetric_unit(all_interstitial_coordinates, factor_group, lattice, tol);
     if (!asym_unit.at(0).isApprox(base_coordinate, 0.001))
      {	
 	    return false; 
