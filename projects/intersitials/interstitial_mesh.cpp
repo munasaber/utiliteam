@@ -133,7 +133,7 @@ label_by_symmetrical_equivalence(const std::vector<Eigen::Vector3d>& coordinates
                                   double tol)
 {
     std::vector<int> coordinate_tags(coordinates.size(),-1);
-    for(int ix = 0; ix<coordinate_tags.size()-1; ++ix)
+    for(int ix = 0; ix<coordinate_tags.size(); ++ix)
     {
         if(coordinate_tags[ix]!=-1)
         {
@@ -225,8 +225,13 @@ std::vector<Eigen::Vector3d> make_asymmetric_unit(const std::vector<Eigen::Vecto
 	std::vector<std::vector<Eigen::Vector3d>> total_orbits=bin_by_symmetrical_equivalence(complete_structure_basis, factor_group, lattice, tol);
 	for (const auto& orbit: total_orbits)
 	{
-		std::cout<<orbit.size()<<std::endl;
-		asymmetric_unit_collated.push_back(orbit[0]);
+		if (orbit.size()!=0)
+		{
+			std::cout<<orbit.size()<<std::endl;
+			asymmetric_unit_collated.push_back(orbit[0]);
+		}
+        	//assert(orbit.size()!=0);
+    		
 	}
 	return asymmetric_unit_collated;
 }
