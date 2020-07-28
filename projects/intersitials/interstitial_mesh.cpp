@@ -76,11 +76,17 @@ std::vector<Eigen::Vector3d> make_orbit(const Eigen::Vector3d& coordinate,
                                         const SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f>& factor_group,
                                         const Lattice& lattice)
 {
+	double tol=1e-5;
 	std::vector<Eigen::Vector3d> orbit;
         for (const SymOp& symop : factor_group.operations())
         {
             Eigen::Vector3d transformedcoord = symop * coordinate;
-    	    orbit.emplace_back(transformedcoord);	    
+            VectorPeriodicCompare_f make_sure_no_repeated_coords(transformedcoord, tol, lattice);
+	    if (std::find_if(orbit.begin(), orbit.end(), make_sure_no_repeated_coords)==orbit.end())
+	//    //Need condition to check if the created coord is not exactly the same as another coord VectorPeriodicCompare_f maybe
+	//		    {
+			    orbit.emplace_back(transformedcoord);	
+//			    }    
         }
 	return orbit;
 }
@@ -132,8 +138,10 @@ label_by_symmetrical_equivalence(const std::vector<Eigen::Vector3d>& coordinates
                                   const Lattice& lattice,
                                   double tol)
 {
+    //need iterator for number of unique orbits, not pposition in coordinate_tags
+    int j=0;
     std::vector<int> coordinate_tags(coordinates.size(),-1);
-    for(int ix = 0; ix<coordinate_tags.size(); ++ix)
+    for(int ix = 0; ix<(coordinate_tags.size()); ++ix)
     {
         if(coordinate_tags[ix]!=-1)
         {
@@ -154,8 +162,19 @@ label_by_symmetrical_equivalence(const std::vector<Eigen::Vector3d>& coordinates
             //VectorCompare_f equals_ixx_coord(coordinates[ixx], tol);
 	    if(std::find_if(coord_orbit.begin(),coord_orbit.end(),equals_ixx_coord)!=coord_orbit.end())
             {
-                coordinate_tags[ixx]=ix;
+		if (ixx==0)
+		{
+			coordinate_tags[ixx]=j;
+			j=j+1;
+		}
+		coordinate_tags[ixx]=coordinate_tags[ix];
+           //     coordinate_tags[ixx]=ix;	
             }
+	    else
+	    {
+	            coordinate_tags[ixx]=j;
+	            j=j+1;
+	    }
         }
     }
 
@@ -163,7 +182,11 @@ label_by_symmetrical_equivalence(const std::vector<Eigen::Vector3d>& coordinates
     {
         assert(l!=-1);
     }
-
+	
+    for (const auto& tags: coordinate_tags)
+    {
+	    std::cout<<tags<<std::endl;
+    }
     return coordinate_tags;
 }
 
@@ -176,7 +199,7 @@ bin_by_symmetrical_equivalence(const std::vector<Eigen::Vector3d>& coordinates,
 {
 	std::vector<int> coordinate_tags= label_by_symmetrical_equivalence(coordinates, factor_group, lattice, tol);
 	//goes through length of coordinate list and connects coordinate to orbit	
-	int num_orbits=*std::max_element(coordinate_tags.begin(), coordinate_tags.end()+1);
+	int num_orbits=*std::max_element(coordinate_tags.begin(), coordinate_tags.end())+1;
 	std::vector<std::vector<Eigen::Vector3d>> orbit_container;
 	orbit_container.resize(num_orbits);
        	for (int i=0; i<coordinates.size(); i++)
@@ -225,13 +248,14 @@ std::vector<Eigen::Vector3d> make_asymmetric_unit(const std::vector<Eigen::Vecto
 	std::vector<std::vector<Eigen::Vector3d>> total_orbits=bin_by_symmetrical_equivalence(complete_structure_basis, factor_group, lattice, tol);
 	for (const auto& orbit: total_orbits)
 	{
-		if (orbit.size()!=0)
-		{
+	if (orbit.size()>0)
+	  {  
 			std::cout<<orbit.size()<<std::endl;
 			asymmetric_unit_collated.push_back(orbit[0]);
-		}
         	//assert(orbit.size()!=0);
-    		
+	  }
+	else
+		std::cout<<"orbit of size zero here!"<<std::endl;	
 	}
 	return asymmetric_unit_collated;
 }

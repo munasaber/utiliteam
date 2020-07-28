@@ -8,6 +8,7 @@
 #include "interstitial_mesh.hpp"
 #include "../avdv-factor-group/factor_group.hpp"
 #include "../avdv-factor-group/point_group.hpp"
+#include "unordered_set"
 
 bool does_find_sites_within_radius_work_two_sites()
 {
@@ -325,18 +326,41 @@ bool does_make_asymmetric_unit_work_for_pnb9o25(double tol)
      return true; 
 }
 
+//check that we have correct labels?
+std::vector<int> get_labels_for_cubic_lattice(double tol)
+{
+	Lattice lattice(Eigen::Vector3d(4,0,0), Eigen::Vector3d(0, 4, 0), Eigen::Vector3d(0, 0, 4));
+	Structure cubic_cell(lattice, {Site("Li", Coordinate(Eigen::Vector3d(0, 0,0)))});
+	std::vector<Eigen::Vector3d> gridpoints=make_grid_points(10, 10, 10, lattice);
+	auto factor_group=generate_factor_group(cubic_cell, tol);
+	std::vector<int> orbit_labels=label_by_symmetrical_equivalence(gridpoints, factor_group, lattice, tol);
+	return orbit_labels;
+}
+
+bool does_coordinate_labels_give_negative_ones(double tol)
+{	
+	std::vector<int> orbit_labels=get_labels_for_cubic_lattice(tol);
+	int mycount = std::count (orbit_labels.begin(), orbit_labels.end(), -1);
+	return mycount==0;				
+}
 
 
+bool does_coordinate_labels_give_wrong_number_of_unique_elements(double tol)
+{
+	std::vector<int> orbit_labels=get_labels_for_cubic_lattice(tol);
+	std::unordered_set<int> unique_labels(orbit_labels.begin(), orbit_labels.end());
+	if ((*std::max_element(orbit_labels.begin(), orbit_labels.end())+1)>unique_labels.size())
+	{
+		std::cout<<"The max element in orbit label is greater than the number of unique labelse";
+	}
+	return((*std::max_element(orbit_labels.begin(), orbit_labels.end())+1)==unique_labels.size());
+}
 bool does_make_grid_points_work()
 {
     int a1 = 5;
     int a2 = 3;
     int a3 = 4;
-    if (make_grid_points(a1, a2, a3, Lattice(Eigen::Vector3d(1, 0, 0), Eigen::Vector3d(0, 1, 0), Eigen::Vector3d(0, 0, 1))).size() == 60)
-    {
-        return true;
-    }
-    return false;
+    return (make_grid_points(a1, a2, a3, Lattice(Eigen::Vector3d(1, 0, 0), Eigen::Vector3d(0, 1, 0), Eigen::Vector3d(0, 0, 1))).size() == 60);
 }
 
 int main()
@@ -359,4 +383,6 @@ int main()
     EXPECT_TRUE(does_simplistic_bin_into_symmetrically_equivalent_work_unit_lattice_exact_coordinates(tol), "does simpler bin by symmetrical equivalece work");
     EXPECT_TRUE(does_make_asymmetric_unit_work_unit_lattice(tol), "Does asym unit work on the unit lattice");
     EXPECT_TRUE(does_make_grid_points_work(), "Check that I can appropriately make grid points");
+    EXPECT_TRUE(does_coordinate_labels_give_negative_ones(tol), "Does label orbits stil have -1's");
+    EXPECT_TRUE(does_coordinate_labels_give_wrong_number_of_unique_elements(tol), "Does the label orbits function give an incorrect number of unique orbits?");
 }
