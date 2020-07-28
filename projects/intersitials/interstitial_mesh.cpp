@@ -84,9 +84,9 @@ std::vector<Eigen::Vector3d> make_orbit(const Eigen::Vector3d& coordinate,
             VectorPeriodicCompare_f make_sure_no_repeated_coords(transformedcoord, tol, lattice);
 	    if (std::find_if(orbit.begin(), orbit.end(), make_sure_no_repeated_coords)==orbit.end())
 	//    //Need condition to check if the created coord is not exactly the same as another coord VectorPeriodicCompare_f maybe
-	//		    {
+			    {
 			    orbit.emplace_back(transformedcoord);	
-//			    }    
+			    }    
         }
 	return orbit;
 }
@@ -140,7 +140,7 @@ label_by_symmetrical_equivalence(const std::vector<Eigen::Vector3d>& coordinates
                                   double tol)
 {
     //need iterator for number of unique orbits, not pposition in coordinate_tags
-    int j=0;
+    int label=0;
     std::vector<int> coordinate_tags(coordinates.size(),-1);
     for(int ix = 0; ix<(coordinate_tags.size()); ++ix)
     {
@@ -163,20 +163,21 @@ label_by_symmetrical_equivalence(const std::vector<Eigen::Vector3d>& coordinates
             //VectorCompare_f equals_ixx_coord(coordinates[ixx], tol);
 	    if(std::find_if(coord_orbit.begin(),coord_orbit.end(),equals_ixx_coord)!=coord_orbit.end())
             {
-		if (ixx==0)
-		{
-			coordinate_tags[ixx]=j;
-			j=j+1;
-		}
-		coordinate_tags[ixx]=coordinate_tags[ix];
-           //     coordinate_tags[ixx]=ix;	
+	//	if (ixx==0)
+	//	{
+	//		coordinate_tags[ixx]=j;
+	//		j=j+1;
+	//	}
+	//	coordinate_tags[ixx]=coordinate_tags[ix];
+                coordinate_tags[ixx]=label;	
             }
-	    else
-	    {
-	            coordinate_tags[ixx]=j;
-	            j=j+1;
-	    }
+	//    else
+	//    {
+	//            coordinate_tags[ixx]=j;
+	//            j=j+1;
+	//    }
         }
+	++label;
     }
 
     for(auto l : coordinate_tags)
@@ -186,6 +187,7 @@ label_by_symmetrical_equivalence(const std::vector<Eigen::Vector3d>& coordinates
 	
     return coordinate_tags;
 }
+
 
 
 std::vector<std::vector<Eigen::Vector3d>>
@@ -251,7 +253,6 @@ std::vector<Eigen::Vector3d> make_asymmetric_unit(const std::vector<Eigen::Vecto
 	  {  
 			//std::cout<<orbit.size()<<std::endl;
 			asymmetric_unit_collated.push_back(orbit[0]);
-        	//assert(orbit.size()!=0);
 	  }
 	else
 		std::cout<<"orbit of size zero here!"<<std::endl;	

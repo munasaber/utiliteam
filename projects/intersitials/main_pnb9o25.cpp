@@ -16,11 +16,11 @@ int main()
 {
 	double tol=1e-5;
 	double radius=1;
-	double orbital_tol=3;
+	double orbit_tol=0.4;
 
 	//PNB9O25
         Structure pnb9o25 = read_poscar("../avdv-factor-group/test_files/pnb9o25.vasp");
-	std::vector<Eigen::Vector3d> original_gridpoints =make_grid_points(10, 20, 20, pnb9o25.get_lattice());
+	std::vector<Eigen::Vector3d> original_gridpoints =make_grid_points(6, 12, 12, pnb9o25.get_lattice());
 
 	std::vector<Eigen::Vector3d> coordinate_removal_list;
 	std::vector<Eigen::Vector3d> original_atom_eigen_coordinates;
@@ -58,7 +58,7 @@ int main()
 	auto factor_group=generate_factor_group(pnb9o25, tol); 
         std::vector<SymOp> symops=factor_group.operations();
 	std::ofstream orbitoutputfile;
-	std::vector<std::vector<Eigen::Vector3d>> orbit_container_list=bin_by_symmetrical_equivalence(remaining_interstitials, symops, lattice, orbital_tol);
+	std::vector<std::vector<Eigen::Vector3d>> orbit_container_list=bin_by_symmetrical_equivalence(remaining_interstitials, symops, lattice, orbit_tol);
 	int i=0;
 	for (const auto& orbit_container: orbit_container_list)
 	{
@@ -78,7 +78,7 @@ int main()
 			write_to_poscar(complete_structure_plus_indiv_orbit, orbitoutputfile);
 			orbitoutputfile.close();
 		}
-	        if (orbit_container.size()!=4)
+	        if (orbit_container.size()>4)
 		{
 			std::cout<<"For some reason I have an orbit of size "<< orbit_container.size()<<std::endl;	
 		}		

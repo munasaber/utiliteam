@@ -56,8 +56,9 @@ int main()
 	
 	//get orbits so that you can print both full structure and  all the different orbit containers
 	auto factor_group=generate_factor_group(fcc, tol);  
+	std::vector<SymOp> symops=factor_group.operations();
 	std::ofstream orbitoutputfile;
-	std::vector<std::vector<Eigen::Vector3d>> orbit_container_list=bin_by_symmetrical_equivalence(remaining_interstitials, factor_group, lattice, tol);
+	std::vector<std::vector<Eigen::Vector3d>> orbit_container_list=bin_by_symmetrical_equivalence(remaining_interstitials, symops, lattice, tol);
 	int i=0;
 	for (const auto& orbit_container: orbit_container_list)
 	{
@@ -88,7 +89,7 @@ int main()
         
 	std::ofstream asymoutputfile;
 	//get 4 atom orbits from asym unit
-	std::vector<Eigen::Vector3d> asym_container=make_asymmetric_unit(remaining_interstitials, factor_group, lattice, tol);
+	std::vector<Eigen::Vector3d> asym_container=make_asymmetric_unit(remaining_interstitials, symops, lattice, tol);
 	std::cout<<asym_container.size()<<std::endl;
 	std::cout<<asym_container.size();
 	int j=0;

@@ -19,9 +19,9 @@ int main()
 	double tol=1e-5;
 	Lattice lattice(Eigen::Vector3d(4,0,0), Eigen::Vector3d(0, 4, 0), Eigen::Vector3d(0, 0, 4));
 	std::vector<Eigen::Vector3d> original_gridpoints=make_grid_points(10, 10, 10, lattice);
-        Structure cubic_cell(lattice, {Site("Li", Coordinate(Eigen::Vector3d(0, 0, 0)))});
-	auto factor_group=generate_factor_group(cubic_cell,tol);
-	auto  orbit_mesh=bin_by_symmetrical_equivalence(original_gridpoints, factor_group, lattice, tol);
+	auto point_group=generate_point_group(lattice,tol);
+        std::vector<SymOp> symops=point_group.operations();
+	auto  orbit_mesh=bin_by_symmetrical_equivalence(original_gridpoints, symops, lattice, tol);
 	std::ofstream cubic_outputfile;
 	int i=0;
 	for (const auto& orbit: orbit_mesh)
@@ -40,7 +40,7 @@ int main()
 		write_to_poscar(cubic_with_sites, cubic_outputfile);
 
 	}
-	auto asym_unit=make_asymmetric_unit(original_gridpoints, factor_group, lattice, tol);
+	auto asym_unit=make_asymmetric_unit(original_gridpoints, symops, lattice, tol);
 	std::cout<<asym_unit.size()<<std::endl;
 }
 
