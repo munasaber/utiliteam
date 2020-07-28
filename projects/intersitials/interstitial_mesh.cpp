@@ -31,7 +31,6 @@ std::vector<Eigen::Vector3d> make_grid_points(int in_a, int in_b, int in_c, cons
 
 // returns the coordinates of interstitial sites within the radius of a certain atom. The intent is to take in intersitial/atom coords in
 // cartesian  coords, but a radius in cartesian coords, and then return the interstitial sites within the radius in cartesian coords. Does
-// it do this? Probably?
 std::vector<Eigen::Vector3d> find_interstitials_within_radius(std::vector<Eigen::Vector3d>& interstitial_coordinates,
                                                               const Eigen::Vector3d& sphere_origin,
                                                               double radius,
@@ -39,7 +38,6 @@ std::vector<Eigen::Vector3d> find_interstitials_within_radius(std::vector<Eigen:
 {
 
     // subtract sphere origin and then do distance algorithim (ie use peridic compare)
-    // use radius as the tolerarnace????
     std::vector<Eigen::Vector3d> interstitials_within_radius;
     for (const auto& interstitial_coord : interstitial_coordinates)
     {
@@ -73,13 +71,15 @@ std::vector<Eigen::Vector3d> keep_reasonable_interstitial_gridpoints(const std::
 // TODO:
 
 std::vector<Eigen::Vector3d> make_orbit(const Eigen::Vector3d& coordinate,
-                                        const SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f>& factor_group,
-                                        const Lattice& lattice)
+//                                        const SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f>& factor_group,
+					const std::vector<SymOp>& symops,  
+					const Lattice& lattice)
 {
 	double tol=1e-5;
 	std::vector<Eigen::Vector3d> orbit;
-        for (const SymOp& symop : factor_group.operations())
-        {
+        //for (const SymOp& symop : factor_group.operations())
+        for (const SymOp& symop: symops)
+	{
             Eigen::Vector3d transformedcoord = symop * coordinate;
             VectorPeriodicCompare_f make_sure_no_repeated_coords(transformedcoord, tol, lattice);
 	    if (std::find_if(orbit.begin(), orbit.end(), make_sure_no_repeated_coords)==orbit.end())
@@ -96,14 +96,15 @@ std::vector<Eigen::Vector3d> make_orbit(const Eigen::Vector3d& coordinate,
 
 std::vector<std::vector<Eigen::Vector3d>>
 more_complex_bin_into_symmetrical_equivalence(const std::vector<Eigen::Vector3d>& coordinates,
-                                  const SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f>& factor_group,
-                                  const Lattice& lattice,
-                                  double tol)
+                     //             const SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f>& factor_group,
+                     				const std::vector<SymOp>& symops,
+   						const Lattice& lattice,
+                                  		double tol)
 {
     std::vector<std::vector<Eigen::Vector3d>> orbit_container;
     for (const auto& interstitial_coordinate : coordinates)
     {
-        for (const SymOp& symop : factor_group.operations())
+        for (const SymOp& symop : symops)
         {
 	    bool already_found=false;
 	    Eigen::Vector3d transformedcoord = symop * interstitial_coordinate;
@@ -113,7 +114,6 @@ more_complex_bin_into_symmetrical_equivalence(const std::vector<Eigen::Vector3d>
                 if (find_if(orbit.begin(), orbit.end(), test_coord) != orbit.end())
                 {
                      already_found=true;
-		     //consider doing vector periodic compare for interstitial is something I should keep
 		     VectorPeriodicCompare_f make_sure_interstitial_is_unique(interstitial_coordinate, tol, lattice);
 		     if (find_if(orbit.begin(), orbit.end(), make_sure_interstitial_is_unique)==orbit.end())
 		     	orbit.emplace_back(interstitial_coordinate);
@@ -134,8 +134,9 @@ more_complex_bin_into_symmetrical_equivalence(const std::vector<Eigen::Vector3d>
 
 std::vector<int>
 label_by_symmetrical_equivalence(const std::vector<Eigen::Vector3d>& coordinates,
-                                  const SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f>& factor_group,
-                                  const Lattice& lattice,
+//                                  const SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f>& factor_group,
+                                  const std::vector<SymOp>& symops,
+				  const Lattice& lattice,
                                   double tol)
 {
     //need iterator for number of unique orbits, not pposition in coordinate_tags
@@ -149,7 +150,7 @@ label_by_symmetrical_equivalence(const std::vector<Eigen::Vector3d>& coordinates
         }
 
         const Eigen::Vector3d& coord=coordinates[ix];
-        std::vector<Eigen::Vector3d> coord_orbit=make_orbit(coord,factor_group,lattice);
+        std::vector<Eigen::Vector3d> coord_orbit=make_orbit(coord, symops,lattice);
 
         for(int ixx=ix; ixx<coordinate_tags.size(); ++ixx)
         {
@@ -183,21 +184,18 @@ label_by_symmetrical_equivalence(const std::vector<Eigen::Vector3d>& coordinates
         assert(l!=-1);
     }
 	
-    for (const auto& tags: coordinate_tags)
-    {
-	    std::cout<<tags<<std::endl;
-    }
     return coordinate_tags;
 }
 
 
 std::vector<std::vector<Eigen::Vector3d>>
 bin_by_symmetrical_equivalence(const std::vector<Eigen::Vector3d>& coordinates,
-                                  const SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f>& factor_group,
-                                  const Lattice& lattice,
+        //                          const SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f>& factor_group,
+                                  const std::vector<SymOp>& symops,
+		                  const Lattice& lattice,
                                   double tol)
 {
-	std::vector<int> coordinate_tags= label_by_symmetrical_equivalence(coordinates, factor_group, lattice, tol);
+	std::vector<int> coordinate_tags= label_by_symmetrical_equivalence(coordinates, symops, lattice, tol);
 	//goes through length of coordinate list and connects coordinate to orbit	
 	int num_orbits=*std::max_element(coordinate_tags.begin(), coordinate_tags.end())+1;
 	std::vector<std::vector<Eigen::Vector3d>> orbit_container;
@@ -240,17 +238,18 @@ bin_by_symmetrical_equivalence(const std::vector<Eigen::Vector3d>& coordinates,
 //    return asymmetric_unit;
 //}
 std::vector<Eigen::Vector3d> make_asymmetric_unit(const std::vector<Eigen::Vector3d>& complete_structure_basis,
-                                                  const SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f>& factor_group,
-                                                  const Lattice& lattice,
+                                                //  const SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f>& factor_group,
+                                                  const std::vector<SymOp>& symops,
+						  const Lattice& lattice,
                                                   double tol)
 {
 	std::vector<Eigen::Vector3d> asymmetric_unit_collated;
-	std::vector<std::vector<Eigen::Vector3d>> total_orbits=bin_by_symmetrical_equivalence(complete_structure_basis, factor_group, lattice, tol);
+	std::vector<std::vector<Eigen::Vector3d>> total_orbits=bin_by_symmetrical_equivalence(complete_structure_basis, symops, lattice, tol);
 	for (const auto& orbit: total_orbits)
 	{
 	if (orbit.size()>0)
 	  {  
-			std::cout<<orbit.size()<<std::endl;
+			//std::cout<<orbit.size()<<std::endl;
 			asymmetric_unit_collated.push_back(orbit[0]);
         	//assert(orbit.size()!=0);
 	  }

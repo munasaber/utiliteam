@@ -184,9 +184,10 @@ bool does_bin_into_symmetrically_equivalent_work_unit_lattice(double tol)
     BinarySymOpPeriodicCompare_f comparison(unit_lattice, tol);
     BinarySymOpPeriodicMultiplier_f mult_op(unit_lattice, tol);
     SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f> factor_group({mirror}, comparison, mult_op);
+    std::vector<SymOp> symops=factor_group.operations();
     std::vector<Eigen::Vector3d> all_interstitial_coordinates{base_coordinate, symmetrically_ineqivalent, symmetrically_equivalent};
 
-    return more_complex_bin_into_symmetrical_equivalence(all_interstitial_coordinates, factor_group, unit_lattice, tol).size() == 2;
+    return more_complex_bin_into_symmetrical_equivalence(all_interstitial_coordinates, symops, unit_lattice, tol).size() == 2;
 }
 
 bool does_bin_into_symmetrically_equivalent_work_unit_lattice_exact_coordinates(double tol)
@@ -202,9 +203,10 @@ bool does_bin_into_symmetrically_equivalent_work_unit_lattice_exact_coordinates(
     BinarySymOpPeriodicCompare_f comparison(unit_lattice, tol);
     BinarySymOpPeriodicMultiplier_f mult_op(unit_lattice, tol);
     SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f> factor_group({mirror}, comparison, mult_op);
+    std::vector<SymOp> symops=factor_group.operations();
     std::vector<Eigen::Vector3d> all_interstitial_coordinates{base_coordinate, symmetrically_ineqivalent, symmetrically_equivalent};
     std::vector<Eigen::Vector3d> sym_equiv_coords{base_coordinate, symmetrically_equivalent};
-    std::vector<std::vector<Eigen::Vector3d>> orbit_container= more_complex_bin_into_symmetrical_equivalence(all_interstitial_coordinates, factor_group, unit_lattice, tol);
+    std::vector<std::vector<Eigen::Vector3d>> orbit_container= more_complex_bin_into_symmetrical_equivalence(all_interstitial_coordinates, symops, unit_lattice, tol);
     //check if all coordinates are correct for orbit
     for (const Eigen::Vector3d interstitial_coord :  sym_equiv_coords)
     {
@@ -232,10 +234,11 @@ bool does_simplistic_bin_into_symmetrically_equivalent_work_unit_lattice_exact_c
     BinarySymOpPeriodicCompare_f comparison(unit_lattice, tol);
     BinarySymOpPeriodicMultiplier_f mult_op(unit_lattice, tol);
     SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f> factor_group({mirror}, comparison, mult_op);
+    std::vector<SymOp> symops=factor_group.operations();
     std::vector<Eigen::Vector3d> all_interstitial_coordinates{base_coordinate, symmetrically_ineqivalent, symmetrically_equivalent};
     std::vector<Eigen::Vector3d> sym_equiv_coords{base_coordinate, symmetrically_equivalent};
     
-    std::vector<std::vector<Eigen::Vector3d>> orbit_container= bin_by_symmetrical_equivalence(all_interstitial_coordinates, factor_group, unit_lattice, tol);
+    std::vector<std::vector<Eigen::Vector3d>> orbit_container= bin_by_symmetrical_equivalence(all_interstitial_coordinates, symops, unit_lattice, tol);
     //check if all coordinates are correct for orbit
     for (const Eigen::Vector3d interstitial_coord :  sym_equiv_coords)
     {
@@ -262,8 +265,9 @@ bool does_label_by_symmetrical_equivalence_work_unit_lattice(double tol)
     BinarySymOpPeriodicCompare_f compare_coordinates(unit_lattice, tol);
     BinarySymOpPeriodicMultiplier_f mult_op(unit_lattice, tol);
     SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f> factor_group({mirror}, compare_coordinates, mult_op);   
+    std::vector<SymOp> symops=factor_group.operations();
     std::vector<Eigen::Vector3d> all_interstitial_coordinates{base_coordinate, symmetrically_inequivalent, symmetrically_equivalent};
-    std::vector<int> labels=label_by_symmetrical_equivalence(all_interstitial_coordinates, factor_group, unit_lattice, tol);
+    std::vector<int> labels=label_by_symmetrical_equivalence(all_interstitial_coordinates, symops, unit_lattice, tol);
     return *std::max_element(labels.begin(), labels.end())==2;
 
 }
@@ -281,9 +285,10 @@ bool does_make_asymmetric_unit_work_unit_lattice(double tol)
     BinarySymOpPeriodicCompare_f compare_coordinates(unit_lattice, tol);
     BinarySymOpPeriodicMultiplier_f mult_op(unit_lattice, tol);
     SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f> factor_group({mirror}, compare_coordinates, mult_op);   
+    std::vector<SymOp> symops=factor_group.operations();
     std::vector<Eigen::Vector3d> all_interstitial_coordinates{base_coordinate, symmetrically_inequivalent, symmetrically_equivalent};
     std::vector<Eigen::Vector3d> sym_inequiv_coords{base_coordinate, symmetrically_inequivalent};
-    std::vector<Eigen::Vector3d> asym_unit=make_asymmetric_unit(all_interstitial_coordinates, factor_group, unit_lattice, tol);
+    std::vector<Eigen::Vector3d> asym_unit=make_asymmetric_unit(all_interstitial_coordinates, symops, unit_lattice, tol);
     for (const auto& inequiv_coord: sym_inequiv_coords)
     {
 	    VectorCompare_f test_coord(inequiv_coord, tol);
@@ -298,6 +303,7 @@ bool does_make_asymmetric_unit_work_for_pnb9o25(double tol)
 {
     Structure pnb9o25 = read_poscar("../avdv-factor-group/test_files/pnb9o25.vasp");
     auto factor_group=generate_factor_group(pnb9o25, tol);  
+    std::vector<SymOp> symops=factor_group.operations();
     for (const auto& symop: factor_group.operations())
     {
 	    std::cout<<symop.get_cart_matrix()<<std::endl;
@@ -309,8 +315,8 @@ bool does_make_asymmetric_unit_work_for_pnb9o25(double tol)
     Eigen::Vector3d niobium_coordinate2_Sym1(0.5000, -0.5000, -0.500);
     std::vector<Eigen::Vector3d> all_interstitial_coordinates{base_coordinate, niobium_coordinate1_Sym1, niobium_coordinate1_Sym2, niobium_coordinate2_Sym1};
     Lattice lattice=pnb9o25.get_lattice();
-    std::cout<< make_asymmetric_unit(all_interstitial_coordinates, factor_group, lattice, tol).size()<< std::endl;
-    std::vector<Eigen::Vector3d> asym_unit= make_asymmetric_unit(all_interstitial_coordinates, factor_group, lattice, tol);
+    //std::cout<< make_asymmetric_unit(all_interstitial_coordinates, symops, lattice, tol).size()<< std::endl;
+    std::vector<Eigen::Vector3d> asym_unit= make_asymmetric_unit(all_interstitial_coordinates, symops, lattice, tol);
     if (!asym_unit.at(0).isApprox(base_coordinate, 0.001))
      {	
 	    return false; 
@@ -333,7 +339,8 @@ std::vector<int> get_labels_for_cubic_lattice(double tol)
 	Structure cubic_cell(lattice, {Site("Li", Coordinate(Eigen::Vector3d(0, 0,0)))});
 	std::vector<Eigen::Vector3d> gridpoints=make_grid_points(10, 10, 10, lattice);
 	auto factor_group=generate_factor_group(cubic_cell, tol);
-	std::vector<int> orbit_labels=label_by_symmetrical_equivalence(gridpoints, factor_group, lattice, tol);
+        std::vector<SymOp> symops=factor_group.operations();
+	std::vector<int> orbit_labels=label_by_symmetrical_equivalence(gridpoints, symops, lattice, tol);
 	return orbit_labels;
 }
 
