@@ -16,11 +16,11 @@ int main()
 {
 	double tol=1e-5;
 	double radius=1;
-	double orbit_tol=0.4;
+	double orbit_tol=0.3;
 
 	//PNB9O25
         Structure pnb9o25 = read_poscar("../avdv-factor-group/test_files/pnb9o25.vasp");
-	std::vector<Eigen::Vector3d> original_gridpoints =make_grid_points(6, 12, 12, pnb9o25.get_lattice());
+	std::vector<Eigen::Vector3d> original_gridpoints =make_grid_points(8, 16, 16, pnb9o25.get_lattice());
 
 	std::vector<Eigen::Vector3d> coordinate_removal_list;
 	std::vector<Eigen::Vector3d> original_atom_eigen_coordinates;
