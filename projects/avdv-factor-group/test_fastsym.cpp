@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
     
     //TODO: Use consistent style for naming classes (Youve been using CamelCase so far)
     Structure structure=read_poscar(argv[1]);
-    SymGroup<SymOp, CartesianBinaryComparator_f> pt_group = generate_point_group(structure.get_lattice().col_vector_matrix(), PREC);
+    SymGroup<SymOp, CartesianBinaryComparator_f> pt_group = generate_point_group(structure.get_lattice(), PREC);
     const auto& pt_group_operations=pt_group.operations();
     MultTable multiplication_table = make_multiplication_table(pt_group_operations, PREC);
     int group_sz=pt_group.operations().size();

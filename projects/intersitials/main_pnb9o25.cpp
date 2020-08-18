@@ -58,10 +58,13 @@ int main()
 	auto factor_group=generate_factor_group(pnb9o25, tol); 
         std::vector<SymOp> symops=factor_group.operations();
 	std::ofstream orbitoutputfile;
+	std::ofstream completeorbitoutputfile;
 	std::vector<std::vector<Eigen::Vector3d>> orbit_container_list=bin_by_symmetrical_equivalence(remaining_interstitials, symops, lattice, orbit_tol);
 	int i=0;
+	std::vector<Site> complete_orbit_counter;
 	for (const auto& orbit_container: orbit_container_list)
 	{
+
 		if (orbit_container.size()==4)
 		{
 			
@@ -71,12 +74,14 @@ int main()
 			for(const auto& interstitial_in_orbit_vector: orbit_container)
 			{
 				all_site_plus_indiv_orbit.emplace_back("Li", Coordinate(interstitial_in_orbit_vector));
+				complete_orbit_counter.emplace_back("Li", Coordinate(interstitial_in_orbit_vector));
 				i++;
 			}
 			orbitoutputfile.open(front+std::to_string(i)+base);
 			Structure complete_structure_plus_indiv_orbit(lattice, all_site_plus_indiv_orbit);
 			write_to_poscar(complete_structure_plus_indiv_orbit, orbitoutputfile);
 			orbitoutputfile.close();
+			
 		}
 	        if (orbit_container.size()>4)
 		{
@@ -84,6 +89,16 @@ int main()
 		}		
 
 	}
+	//get the complete set of all relevant orbits
+	std::vector<Site> orbit_counter_plus_pnb9o25=pnb9o25.get_sites();
+	for (const auto& orbit: complete_orbit_counter)
+	{
+		orbit_counter_plus_pnb9o25.emplace_back(orbit);
+	}
+	completeorbitoutputfile.open("outputfiles/pnb9o25_allorbitssize4.vasp");
+	write_to_poscar(Structure(lattice, orbit_counter_plus_pnb9o25), completeorbitoutputfile);
+	completeorbitoutputfile.close();
+
 	std::cout<<orbit_container_list.size()<<std::endl;
 	
 	//std::cout<<asym_container.size();

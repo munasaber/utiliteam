@@ -9,9 +9,7 @@ int main()
     std::cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"<<std::endl;
     //test constructor
 std::vector<Site> test_sites;
-Eigen::Matrix3d lattice_matrix;
-lattice_matrix<<1, 1, 0, 1, 0, 1, 0, 1,1;
-Lattice my_lattice=Lattice(lattice_matrix);
+Lattice my_lattice=Lattice(Eigen::Vector3d(1, 1, 0), Eigen::Vector3d(1, 0, 1), Eigen::Vector3d(0, 1, 1));
 test_sites.push_back(Site("Na", Eigen::Vector3d(0.1, 0.1, 0.1)));
 Structure my_structure=Structure(my_lattice,test_sites);
 

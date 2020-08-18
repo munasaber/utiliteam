@@ -1,6 +1,6 @@
 #ifndef SITE_H
 #define SITE_H
-#include "coordinate.hpp"
+#include "vectorfunctions.hpp"
 #include "lattice.hpp"
 #include "../../submodules/eigen-git-mirror/Eigen/Core"
 #include "../../submodules/eigen-git-mirror/Eigen/Dense"
@@ -10,11 +10,10 @@
 class Site
 {
 public:
-    Site(const std::string atom_name, const Coordinate& init_coord);
+    Site(const std::string atom_name, const Eigen::Vector3d& init_coord);
     std::string get_atom() const;
     Eigen::Vector3d get_eigen_coordinate() const;
-    Coordinate get_coordinate() const;
-    Coordinate m_coord;
+    Eigen::Vector3d m_coord;
 private:
     std::string m_atom;
    // Coordinate m_coord;
