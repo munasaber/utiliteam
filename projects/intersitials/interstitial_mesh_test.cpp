@@ -1,4 +1,4 @@
-#include "../avdv-factor-group/coordinate.hpp"
+#include "../avdv-factor-group/vectorfunctions.hpp"
 #include "../avdv-factor-group/symgroup.hpp"
 #include "../avdv-factor-group/symop.hpp"
 #include "../avdv-factor-group/io.hpp"
@@ -336,7 +336,7 @@ bool does_make_asymmetric_unit_work_for_pnb9o25(double tol)
 std::vector<int> get_labels_for_cubic_lattice(double tol)
 {
 	Lattice lattice(Eigen::Vector3d(4,0,0), Eigen::Vector3d(0, 4, 0), Eigen::Vector3d(0, 0, 4));
-	Structure cubic_cell(lattice, {Site("Li", Coordinate(Eigen::Vector3d(0, 0,0)))});
+	Structure cubic_cell(lattice, {Site("Li", (Eigen::Vector3d(0, 0,0)))});
 	std::vector<Eigen::Vector3d> gridpoints=make_grid_points(10, 10, 10, lattice);
 	auto factor_group=generate_factor_group(cubic_cell, tol);
         std::vector<SymOp> symops=factor_group.operations();

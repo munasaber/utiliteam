@@ -88,7 +88,7 @@ Structure read_poscar(const std::string &poscar_path) {
   int t = 0;
   for (int i = 0; i < species.size(); i++)
     for (int j = 0; j < NumSpecies[i]; j++) {
-      Coordinate temp(raw_coordinate_values[t]);
+      Eigen::Vector3d temp(raw_coordinate_values[t]);
       Site Single_site(species[i], temp);
       Sites.push_back(Single_site);
       t = t + 1;

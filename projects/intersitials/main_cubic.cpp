@@ -1,6 +1,6 @@
 #include "interstitial_mesh.hpp"
 #include "../avdv-factor-group/site.hpp"
-#include "../avdv-factor-group/coordinate.hpp"
+#include "../avdv-factor-group/vectorfunctions.hpp"
 #include "write_to_poscar.hpp"
 #include "../avdv-factor-group/io.hpp"
 #include "../avdv-factor-group/factor_group.hpp"
@@ -32,7 +32,7 @@ int main()
 		//cubic_outputfile.open();
 			for (const auto& interstitial: orbit)
 			{
-				sites_to_push_back.emplace_back(Site("Li", Coordinate(interstitial)));
+				sites_to_push_back.emplace_back(Site("Li", (interstitial)));
 			i++;
 			}
 		Structure cubic_with_sites(lattice, sites_to_push_back);

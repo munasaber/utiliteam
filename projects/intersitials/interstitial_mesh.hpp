@@ -2,7 +2,7 @@
 #define INTERSTITIAL_MESH_H
 
 #include "../avdv-factor-group/lattice.hpp"
-#include "../avdv-factor-group/coordinate.hpp"
+#include "../avdv-factor-group/vectorfunctions.hpp"
 #include "../avdv-factor-group/site.hpp"
 #include "../avdv-factor-group/symop.hpp"
 #include "../avdv-factor-group/structure.hpp"

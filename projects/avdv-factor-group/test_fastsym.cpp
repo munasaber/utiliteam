@@ -9,7 +9,7 @@
 #include "./tests.hpp"
 #include "./lattice.hpp"
 #include "./site.hpp"
-#include "./coordinate.hpp"
+#include "vectorfunctions.hpp"
 
 #define PREC 1e-6
 

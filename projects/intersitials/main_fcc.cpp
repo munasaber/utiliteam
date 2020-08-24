@@ -1,6 +1,6 @@
 #include "interstitial_mesh.hpp"
 #include "../avdv-factor-group/site.hpp"
-#include "../avdv-factor-group/coordinate.hpp"
+#include "../avdv-factor-group/vectorfunctions.hpp"
 #include "write_to_poscar.hpp"
 #include "../avdv-factor-group/io.hpp"
 #include "../avdv-factor-group/factor_group.hpp"
@@ -70,7 +70,7 @@ int main()
 			std::vector<Site> all_site_plus_indiv_orbit=fcc.get_sites();
 			for(const auto& interstitial_in_orbit_vector: orbit_container)
 			{
-				all_site_plus_indiv_orbit.emplace_back("Li", Coordinate(interstitial_in_orbit_vector));
+				all_site_plus_indiv_orbit.emplace_back("Li",(interstitial_in_orbit_vector));
 				i++;
 			}
 			orbitoutputfile.open(front+std::to_string(i)+base);
@@ -98,11 +98,11 @@ int main()
         	std::string front("outputfiles/fcc_from_aym_");
 		std::string base(".vasp");
 	        std::vector<Site> four_sites_to_add_container;
-		four_sites_to_add_container.emplace_back("Li", Coordinate(asym_vector));
+		four_sites_to_add_container.emplace_back("Li", (asym_vector));
 		for (const SymOp& operation: factor_group.operations())
 		{
 			Eigen::Vector3d transformed_asym_vector=operation*asym_vector;
-			four_sites_to_add_container.emplace_back("Li", Coordinate(transformed_asym_vector));
+			four_sites_to_add_container.emplace_back("Li",(transformed_asym_vector));
 		}
 		asymoutputfile.open(front+std::to_string(j)+base);
 		Structure complete_structure_from_asym(lattice, four_sites_to_add_container);
@@ -115,7 +115,7 @@ int main()
 	std::vector<Site> all_site_and_interstitials_container=fcc.get_sites();
 	for (const auto& eigen_coord: remaining_interstitials)
 	{
-		all_site_and_interstitials_container.emplace_back("Li", Coordinate(eigen_coord));
+		all_site_and_interstitials_container.emplace_back("Li", (eigen_coord));
 	}
 	Structure complete_structure(lattice, all_site_and_interstitials_container);
 	

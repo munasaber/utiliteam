@@ -1,6 +1,6 @@
 #include "symop.hpp"
 #include "site.hpp"
-#include "coordinate.hpp"
+#include  "vectorfunctions.hpp"
 #include "lattice.hpp"
 
 SymOp::SymOp(const Eigen::Matrix3d& cart_matrix, const Eigen::Vector3d& translation)
@@ -42,8 +42,8 @@ BinarySymOpPeriodicCompare_f::BinarySymOpPeriodicCompare_f(const Lattice& lattic
 
 bool BinarySymOpPeriodicCompare_f::operator()(const SymOp& element1, const SymOp& element2) const
 {    
-	Site temp_site1 = Site(std::string("xx"), Coordinate(element1.get_translation()));
-	Site temp_site2 = Site(std::string("xx"), Coordinate(element2.get_translation()));
+	Site temp_site1 = Site(std::string("xx"), element1.get_translation());
+	Site temp_site2 = Site(std::string("xx"), element2.get_translation());
     SitePeriodicCompare_f translation_comparison(temp_site1, tol, m_lattice);
     
     SymOp symop1(element1.get_cart_matrix());

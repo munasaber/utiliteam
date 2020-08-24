@@ -12,12 +12,12 @@
 bool test_transform_basis_inversion()
 {
     SymOp inversion(Eigen::Matrix3d::Identity() * -1);
-    std::vector<Site> basis{Site("Na", Coordinate(Eigen::Vector3d(1, 1, 1)))};
+    std::vector<Site> basis{Site("Na", Eigen::Vector3d(1, 1, 1))};
 
     auto inverted_basis = transform_basis(inversion, basis);
     SiteCompare_f compare(inverted_basis.at(0), 1e-5);
 
-    return compare(Site("Na", Coordinate(Eigen::Vector3d(-1, -1, -1))));
+    return compare(Site("Na", Eigen::Vector3d(-1, -1, -1)));
 }
 
 bool test_transform_basis_glide()
@@ -26,16 +26,16 @@ bool test_transform_basis_glide()
     mirror_mat(2, 2) = -1;
     SymOp glide(mirror_mat, Eigen::Vector3d(0.2, 0.2, 0));
 
-    std::vector<Site> basis{Site("Na", Coordinate(Eigen::Vector3d(1, 1, 1)))};
+    std::vector<Site> basis{Site("Na", Eigen::Vector3d(1, 1, 1))};
     auto glided_basis = transform_basis(glide, basis);
     SiteCompare_f compare(glided_basis.at(0), 1e-5);
 
-    return compare(Site("Na", Coordinate(Eigen::Vector3d(1.2, 1.2, -1))));
+    return compare(Site("Na", Eigen::Vector3d(1.2, 1.2, -1)));
 }
 
 bool test_transform_basis_size()
 {
-    Site s("Na", Coordinate(Eigen::Vector3d(1, 1, 1)));
+    Site s("Na", Eigen::Vector3d(1, 1, 1));
     std::vector<Site> basis(100, s);
     SymOp identity(Eigen::Matrix3d::Identity());
     auto same_basis = transform_basis(identity, basis);
@@ -46,9 +46,9 @@ bool basis_maps_onto_itself_test(double tol)
 {
     Eigen::Matrix3d identity=Eigen::Matrix3d::Identity();
     Lattice lat(identity.col(0),identity.col(1),identity.col(2));
-    Site na1("Na",Coordinate(Eigen::Vector3d::Zero()));
-    Site na2("Na",Coordinate(0.5*Eigen::Vector3d::Ones()));
-    Site li1("Li",Coordinate(-0.25*Eigen::Vector3d::Ones()));
+    Site na1("Na",Eigen::Vector3d::Zero());
+    Site na2("Na",0.5*Eigen::Vector3d::Ones());
+    Site li1("Li",-0.25*Eigen::Vector3d::Ones());
     std::vector<Site> basis{na1,na2,li1};
     std::vector<Site> basis_shuffle{li1,na2,na1};
 
@@ -61,12 +61,12 @@ bool basis_maps_onto_itself_periodically(double tol)
 {
     Eigen::Matrix3d identity=Eigen::Matrix3d::Identity();
     Lattice lat(identity.col(0),identity.col(1),identity.col(2));
-    Site na1("Na",Coordinate(Eigen::Vector3d::Zero()));
-    Site na2("Na",Coordinate(0.5*Eigen::Vector3d::Ones()));
-    Site li1("Li",Coordinate(-0.25*Eigen::Vector3d::Ones()));
+    Site na1("Na",Eigen::Vector3d::Zero());
+    Site na2("Na",0.5*Eigen::Vector3d::Ones());
+    Site li1("Li",-0.25*Eigen::Vector3d::Ones());
 
     std::vector<Site> basis{na1,na2,li1};
-    Site periodic_na2("Na",Coordinate(1.5*Eigen::Vector3d::Ones()));
+    Site periodic_na2("Na",1.5*Eigen::Vector3d::Ones());
     std::vector<Site> basis_periodic{na1,periodic_na2,li1};
 
     return basis_maps_onto_itself(basis,basis_periodic,lat, tol);
@@ -76,10 +76,10 @@ bool basis_doesnt_map_onto_itself(double tol)
 {
     Eigen::Matrix3d identity=Eigen::Matrix3d::Identity();
     Lattice lat(identity.col(0),identity.col(1),identity.col(2));
-    Site na1("Na",Coordinate(Eigen::Vector3d::Zero()));
-    Site na2("Na",Coordinate(0.5*Eigen::Vector3d::Ones()));
-    Site li1("Li",Coordinate(-0.25*Eigen::Vector3d::Ones()));
-    Site na3("Na",Coordinate(-0.25*Eigen::Vector3d::Ones()));
+    Site na1("Na",Eigen::Vector3d::Zero());
+    Site na2("Na",0.5*Eigen::Vector3d::Ones());
+    Site li1("Li",-0.25*Eigen::Vector3d::Ones());
+    Site na3("Na",-0.25*Eigen::Vector3d::Ones());
 
     return !basis_maps_onto_itself({na1,na2,li1},{na1,na2,na3},lat, tol);
 }
@@ -88,17 +88,17 @@ bool basis_doesnt_map_onto_itself_size_mismatch(double tol)
 {
     Eigen::Matrix3d identity=Eigen::Matrix3d::Identity();
     Lattice lat(identity.col(0),identity.col(1),identity.col(2));
-    Site na1("Na",Coordinate(Eigen::Vector3d::Zero()));
-    Site na2("Na",Coordinate(0.5*Eigen::Vector3d::Ones()));
-    Site li1("Li",Coordinate(-0.25*Eigen::Vector3d::Ones()));
-    Site na3("Na",Coordinate(-0.25*Eigen::Vector3d::Ones()));
+    Site na1("Na",(Eigen::Vector3d::Zero()));
+    Site na2("Na",(0.5*Eigen::Vector3d::Ones()));
+    Site li1("Li",(-0.25*Eigen::Vector3d::Ones()));
+    Site na3("Na",(-0.25*Eigen::Vector3d::Ones()));
 
     return !basis_maps_onto_itself({na1,na2,li1},{na1},lat, PREC) && !basis_maps_onto_itself({na1},{na1,na2,li1},lat, tol);
 }
 
 bool generate_translations_works(double tol)
 {
-	Site original_basis("Na", Coordinate(Eigen::Vector3d(0.0, 0.0, 0.0)));
+	Site original_basis("Na", (Eigen::Vector3d(0.0, 0.0, 0.0)));
 	Eigen::Vector3d expected_translations1(Eigen::Vector3d(0.2, 0.2, 0.2));
 	Eigen::Vector3d expected_translations2(Eigen::Vector3d(0.4, 0.2, 0.2));
 	Eigen::Vector3d expected_translations3(Eigen::Vector3d(0.6, 0.2, 0.2));

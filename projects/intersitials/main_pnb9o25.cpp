@@ -1,6 +1,6 @@
 #include "interstitial_mesh.hpp"
 #include "../avdv-factor-group/site.hpp"
-#include "../avdv-factor-group/coordinate.hpp"
+#include "../avdv-factor-group/vectorfunctions.hpp"
 #include "write_to_poscar.hpp"
 #include "../avdv-factor-group/io.hpp"
 #include "../avdv-factor-group/factor_group.hpp"
@@ -73,8 +73,8 @@ int main()
 			std::vector<Site> all_site_plus_indiv_orbit=pnb9o25.get_sites();
 			for(const auto& interstitial_in_orbit_vector: orbit_container)
 			{
-				all_site_plus_indiv_orbit.emplace_back("Li", Coordinate(interstitial_in_orbit_vector));
-				complete_orbit_counter.emplace_back("Li", Coordinate(interstitial_in_orbit_vector));
+				all_site_plus_indiv_orbit.emplace_back("Li", (interstitial_in_orbit_vector));
+				complete_orbit_counter.emplace_back("Li", (interstitial_in_orbit_vector));
 				i++;
 			}
 			orbitoutputfile.open(front+std::to_string(i)+base);
@@ -130,7 +130,7 @@ int main()
 	std::vector<Site> all_site_and_interstitials_container=pnb9o25.get_sites();
 	for (const auto& eigen_coord: remaining_interstitials)
 	{
-		all_site_and_interstitials_container.emplace_back("Li", Coordinate(eigen_coord));
+		all_site_and_interstitials_container.emplace_back("Li", (eigen_coord));
 	}
 	Structure complete_structure(lattice, all_site_and_interstitials_container);
 	

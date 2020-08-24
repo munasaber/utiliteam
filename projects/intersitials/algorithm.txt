@@ -1,6 +1,6 @@
 
 
-Overall ALgorithm 
+Overall ALgorithm for mesh
 
 Read_Poscar
 
@@ -25,6 +25,11 @@ make_gridpoint_orbits(asym_units, factorgroup)
 {
 
 }
+
+Overall algorithm for interstitial locator
+-separate from mesh likely
+-input takes poscar
+-output gives coordinates or poscars of different anion coordinations (i.e either 4, 5, 6, 7 etc)
 
 
 
