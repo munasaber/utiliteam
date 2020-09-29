@@ -171,55 +171,55 @@ bool does_make_orbit_work()
 };
 
 
-bool does_bin_into_symmetrically_equivalent_work_unit_lattice(double tol)
-{
-    Lattice unit_lattice(Eigen::Vector3d(1, 0, 0), Eigen::Vector3d(0, 1, 0), Eigen::Vector3d(0, 0, 1));
+//bool does_bin_into_symmetrically_equivalent_work_unit_lattice(double tol)
+//{
+//    Lattice unit_lattice(Eigen::Vector3d(1, 0, 0), Eigen::Vector3d(0, 1, 0), Eigen::Vector3d(0, 0, 1));
+//
+//    Eigen::Vector3d base_coordinate(Eigen::Vector3d(0.51, 0.51, 0.75));
+//    Eigen::Vector3d symmetrically_equivalent(Eigen::Vector3d(0.51, 0.51, -0.75));
+//    Eigen::Vector3d symmetrically_ineqivalent(Eigen::Vector3d(0.9, 0.9, 0.9));
+//    Eigen::Matrix3d matrix_mirror;
+//    matrix_mirror<<1, 0, 0, 0, 1, 0, 0, 0, -1;
+//    SymOp mirror((matrix_mirror));
+//    BinarySymOpPeriodicCompare_f comparison(unit_lattice, tol);
+//    BinarySymOpPeriodicMultiplier_f mult_op(unit_lattice, tol);
+//    SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f> factor_group({mirror}, comparison, mult_op);
+//    std::vector<SymOp> symops=factor_group.operations();
+//    std::vector<Eigen::Vector3d> all_interstitial_coordinates{base_coordinate, symmetrically_ineqivalent, symmetrically_equivalent};
+//
+//    return more_complex_bin_into_symmetrical_equivalence(all_interstitial_coordinates, symops, unit_lattice, tol).size() == 2;
+//}
 
-    Eigen::Vector3d base_coordinate(Eigen::Vector3d(0.51, 0.51, 0.75));
-    Eigen::Vector3d symmetrically_equivalent(Eigen::Vector3d(0.51, 0.51, -0.75));
-    Eigen::Vector3d symmetrically_ineqivalent(Eigen::Vector3d(0.9, 0.9, 0.9));
-    Eigen::Matrix3d matrix_mirror;
-    matrix_mirror<<1, 0, 0, 0, 1, 0, 0, 0, -1;
-    SymOp mirror((matrix_mirror));
-    BinarySymOpPeriodicCompare_f comparison(unit_lattice, tol);
-    BinarySymOpPeriodicMultiplier_f mult_op(unit_lattice, tol);
-    SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f> factor_group({mirror}, comparison, mult_op);
-    std::vector<SymOp> symops=factor_group.operations();
-    std::vector<Eigen::Vector3d> all_interstitial_coordinates{base_coordinate, symmetrically_ineqivalent, symmetrically_equivalent};
-
-    return more_complex_bin_into_symmetrical_equivalence(all_interstitial_coordinates, symops, unit_lattice, tol).size() == 2;
-}
-
-bool does_bin_into_symmetrically_equivalent_work_unit_lattice_exact_coordinates(double tol)
-{
-    Lattice unit_lattice(Eigen::Vector3d(1, 0, 0), Eigen::Vector3d(0, 1, 0), Eigen::Vector3d(0, 0, 1));
-
-    Eigen::Vector3d base_coordinate(Eigen::Vector3d(0.51, 0.51, 0.75));
-    Eigen::Vector3d symmetrically_equivalent(Eigen::Vector3d(0.51, 0.51, -0.75));
-    Eigen::Vector3d symmetrically_ineqivalent(Eigen::Vector3d(0.9, 0.9, 0.9));
-    Eigen::Matrix3d matrix_mirror;
-    matrix_mirror<<1, 0, 0, 0, 1, 0, 0, 0, -1;
-    SymOp mirror((matrix_mirror));
-    BinarySymOpPeriodicCompare_f comparison(unit_lattice, tol);
-    BinarySymOpPeriodicMultiplier_f mult_op(unit_lattice, tol);
-    SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f> factor_group({mirror}, comparison, mult_op);
-    std::vector<SymOp> symops=factor_group.operations();
-    std::vector<Eigen::Vector3d> all_interstitial_coordinates{base_coordinate, symmetrically_ineqivalent, symmetrically_equivalent};
-    std::vector<Eigen::Vector3d> sym_equiv_coords{base_coordinate, symmetrically_equivalent};
-    std::vector<std::vector<Eigen::Vector3d>> orbit_container= more_complex_bin_into_symmetrical_equivalence(all_interstitial_coordinates, symops, unit_lattice, tol);
-    //check if all coordinates are correct for orbit
-    for (const Eigen::Vector3d interstitial_coord :  sym_equiv_coords)
-    {
-		VectorCompare_f test_coord(interstitial_coord, tol);	
-		if (find_if(orbit_container[0].begin(), orbit_container[0].end(), test_coord)==orbit_container[0].end())
-		{
-			return false;
-		}
-    }
-    //add function to return false if the second orbit does have the other coordinate alone
-	return true;
-}
-
+//bool does_bin_into_symmetrically_equivalent_work_unit_lattice_exact_coordinates(double tol)
+//{
+//    Lattice unit_lattice(Eigen::Vector3d(1, 0, 0), Eigen::Vector3d(0, 1, 0), Eigen::Vector3d(0, 0, 1));
+//
+//    Eigen::Vector3d base_coordinate(Eigen::Vector3d(0.51, 0.51, 0.75));
+//    Eigen::Vector3d symmetrically_equivalent(Eigen::Vector3d(0.51, 0.51, -0.75));
+//    Eigen::Vector3d symmetrically_ineqivalent(Eigen::Vector3d(0.9, 0.9, 0.9));
+//    Eigen::Matrix3d matrix_mirror;
+//    matrix_mirror<<1, 0, 0, 0, 1, 0, 0, 0, -1;
+//    SymOp mirror((matrix_mirror));
+//    BinarySymOpPeriodicCompare_f comparison(unit_lattice, tol);
+//    BinarySymOpPeriodicMultiplier_f mult_op(unit_lattice, tol);
+//    SymGroup<SymOp, BinarySymOpPeriodicCompare_f, BinarySymOpPeriodicMultiplier_f> factor_group({mirror}, comparison, mult_op);
+//    std::vector<SymOp> symops=factor_group.operations();
+//    std::vector<Eigen::Vector3d> all_interstitial_coordinates{base_coordinate, symmetrically_ineqivalent, symmetrically_equivalent};
+//    std::vector<Eigen::Vector3d> sym_equiv_coords{base_coordinate, symmetrically_equivalent};
+//    std::vector<std::vector<Eigen::Vector3d>> orbit_container= more_complex_bin_into_symmetrical_equivalence(all_interstitial_coordinates, symops, unit_lattice, tol);
+//    //check if all coordinates are correct for orbit
+//    for (const Eigen::Vector3d interstitial_coord :  sym_equiv_coords)
+//    {
+//		VectorCompare_f test_coord(interstitial_coord, tol);	
+//		if (find_if(orbit_container[0].begin(), orbit_container[0].end(), test_coord)==orbit_container[0].end())
+//		{
+//			return false;
+//		}
+//    }
+//    //add function to return false if the second orbit does have the other coordinate alone
+//	return true;
+//}
+//
 
 bool does_simplistic_bin_into_symmetrically_equivalent_work_unit_lattice_exact_coordinates(double tol)
 {
@@ -370,6 +370,27 @@ bool does_make_grid_points_work()
     return (make_grid_points(a1, a2, a3, Lattice(Eigen::Vector3d(1, 0, 0), Eigen::Vector3d(0, 1, 0), Eigen::Vector3d(0, 0, 1))).size() == 60);
 }
 
+bool does_apply_factor_group_on_each_bin_work_for_single_case(double tol)
+{
+	Eigen::Vector3d coordinate;
+	coordinate<<1,1,1;
+	std::vector<Eigen::Vector3d> coord_container;
+	coord_container.emplace_back(coordinate);
+        Structure pnb9o25 = read_poscar("../avdv-factor-group/test_files/pnb9o25.vasp");
+        auto factor_group=generate_factor_group(pnb9o25, tol);
+        Lattice lattice=pnb9o25.get_lattice();	
+        std::vector<SymOp> symops=factor_group.operations();
+	std::vector<std::vector<Eigen::Vector3d>> orbit_container=apply_factor_group_on_each_bin(coord_container, symops, lattice, tol);
+	if (orbit_container.size()==4)
+	{
+		//if symmetrically equiavalent
+		return true;
+	}
+	return false;
+}
+
+
+
 int main()
 {
     double tol = 1e-5;
@@ -383,8 +404,8 @@ int main()
     EXPECT_TRUE(does_find_sites_within_radius_work_for_pnb9o25_all_corners_of_octahedra(), "all octahedral corners (6) should be within the radius of the Niobium but P shouldn't");
     EXPECT_TRUE(does_keep_reasonable_interstitial_gridpoints_work(tol), "does keep reasonable interstitial gridpoints get the correct vector size (2)");
     EXPECT_TRUE(does_keep_reasonable_interstitial_gridpoints_work_for_exact_coordinates(tol), "does keep reasonable interstitial functions get the right coordinates");
-    EXPECT_TRUE(does_bin_into_symmetrically_equivalent_work_unit_lattice(tol), "does bin into symmetrically equivalent orbits work for unit lattice");
-    EXPECT_TRUE(does_bin_into_symmetrically_equivalent_work_unit_lattice_exact_coordinates(tol), "does bin into symmetrically equivalent work when looking at exact coordinates for unit lattice");
+//    EXPECT_TRUE(does_bin_into_symmetrically_equivalent_work_unit_lattice(tol), "does bin into symmetrically equivalent orbits work for unit lattice");
+//    EXPECT_TRUE(does_bin_into_symmetrically_equivalent_work_unit_lattice_exact_coordinates(tol), "does bin into symmetrically equivalent work when looking at exact coordinates for unit lattice");
     EXPECT_TRUE(does_label_by_symmetrical_equivalence_work_unit_lattice(tol), "does label by symmetricla equivalence work for a unit lattice");
     EXPECT_TRUE(does_make_asymmetric_unit_work_for_pnb9o25(tol), "does make asymmetric unit for the pnb9o25 system");
     EXPECT_TRUE(does_simplistic_bin_into_symmetrically_equivalent_work_unit_lattice_exact_coordinates(tol), "does simpler bin by symmetrical equivalece work");

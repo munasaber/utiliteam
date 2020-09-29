@@ -14,9 +14,8 @@ public:
     Eigen::Vector3d get_translation() const;
     Eigen::Matrix3d get_cart_matrix() const;
 
-    Eigen::Matrix3d m_cart_matrix;
 private:
-
+    Eigen::Matrix3d m_cart_matrix;
     Eigen::Vector3d m_translation;
 };
 
